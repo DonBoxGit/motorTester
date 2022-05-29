@@ -5,8 +5,8 @@ Motor::Motor(const uint8_t step,
              const uint8_t enb) : step_pin  (step),
                                   dir_pin   (dir) ,
                                   enable_pin(enb) {
-	pinMode(step_pin, 	OUTPUT);
-	pinMode(dir_pin, 	OUTPUT);
+	pinMode(step_pin,   OUTPUT);
+	pinMode(dir_pin,    OUTPUT);
 	pinMode(enable_pin, OUTPUT);
 	enableOff();
 }

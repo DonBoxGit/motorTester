@@ -27,7 +27,7 @@ void Motor::execute() {
 	if(!enable) {
 		digitalWrite(dir_pin, dir);
 		run();
-	}else{
+	} else {
 		stop();
 	}
 }

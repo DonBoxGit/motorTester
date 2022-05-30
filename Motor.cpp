@@ -41,7 +41,7 @@ void Motor::enableOff() {
 }
 
 void Motor::setForward() {
-  dir = HIGH;
+  	dir = HIGH;
 }
 
 void Motor::setReverse() {
@@ -49,7 +49,7 @@ void Motor::setReverse() {
 }
 
 bool Motor::getEnable() {
-  return enable;
+  	return enable;
 }
 
 bool Motor::getDirection() {

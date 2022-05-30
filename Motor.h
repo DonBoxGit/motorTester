@@ -11,8 +11,8 @@ class Motor {
 	  void enableOff	  (void);
     void setForward   (void);
     void setReverse   (void);
+    void stop         (void);  
 	  bool getEnable	  (void);
-	  void stop  	  	  (void);  
 	  bool getDirection (void);
 	  void execute	    (void);
   

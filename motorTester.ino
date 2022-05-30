@@ -39,22 +39,22 @@ void setup() {
   display.display();
 }
 
-uint8_t huge = 100;
-uint8_t score = 0;
-uint32_t tmr;
+uint8_t  subtrahend = 100;
+uint8_t  score      = 0;
+uint32_t tmr        = 0;
 
 void loop() {
   encoder.tick();
   if(encoder.isRight()) {
-    impulse += huge;
+    impulse += subtrahend;
   }
   else if(encoder.isLeft()) {
     if(impulse < MIN_) impulse = MIN_;
-    else impulse -= huge;
+    else impulse -= subtrahend;
   }
   if(encoder.isClick()) {
-    if(score == 2) {huge = 100; score = 0;}
-    else {huge = huge / 10; score++;}
+    if(score == 2) {subtrahend = 100; score = 0;}
+    else           {subtrahend /= 10; score++;  }
   }
 
   if(!digitalRead(BUTTON_RIGHT_PIN)) {
@@ -68,25 +68,105 @@ void loop() {
   }
   if(!digitalRead(BUTTON_RESET_PIN)) steps = 0;
   if(!digitalRead(TERM_SW_PIN)) motor.stop();
-  
+
   if(millis() - tmr >= 100){
     draw();
     tmr = millis();
   }
+
   
   motor.execute();
 }
 
+  uint32_t tmr1;
+  bool viewFlag = false;
+   
 void draw(void) {
   display.clearDisplay();
+  
   display.setCursor(3, 10);
   display.print(F("Speed: "));
   display.setCursor(40, 10);
   display.print(impulse);
+  display.setCursor(68, 10);
+  display.print(F("-"));
+  
+  switch(score){
+    case 0:
+      display.fillRoundRect(77, 8, 20, 11, 3, WHITE);
+      display.setTextColor(BLACK);
+      display.setCursor(78, 10);
+      display.print("100");
+      display.setTextColor(WHITE);
+      display.setCursor(100, 10);
+      display.print("10");
+      display.setCursor(118, 10);
+      display.print(F("1"));
+    break;
+    
+    case 1:
+      display.setCursor(78, 10);
+      display.print("100");
+      display.fillRoundRect(98, 8, 16, 11, 3, WHITE);
+      display.setTextColor(BLACK);
+      display.setCursor(100, 10);
+      display.print("10");
+      display.setTextColor(WHITE);
+      display.setCursor(118, 10);
+      display.print(F("1"));
+    break;
+    
+    case 2:
+      display.setCursor(78, 10);
+      display.print("100");
+      display.setCursor(100, 10);
+      display.print("10");
+      display.fillRoundRect(115, 8, 11, 11, 3, WHITE);
+      display.setTextColor(BLACK);
+      display.setCursor(118, 10);
+      display.print(F("1"));
+      display.setTextColor(WHITE);
+    break;
+  }
+    display.setCursor(55, 25);
+    display.print(F("Steps: "));
+    display.setCursor(92, 25);
+    display.print(steps);
 
-  display.setCursor(3, 20);
-  display.print(F("Steps: "));
-  display.setCursor(40, 20);
-  display.print(steps);
+  if(!motor.getEnable()){
+    if(millis() - tmr1 >= 500){
+        tmr1 = millis();
+        viewFlag = !viewFlag;
+      }
+    if(motor.getDirection()){
+      if(viewFlag){
+        display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
+        display.setTextColor(BLACK);
+        display.setCursor(4, 23);
+        display.print("FORWARD");
+      }
+    } else {
+      if(viewFlag){
+        display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
+        display.setTextColor(BLACK);
+        display.setCursor(4, 23);
+        display.print("REVESRE");
+      }
+    }
+  } else {
+    if(!digitalRead(TERM_SW_PIN)) {
+      display.fillRoundRect(5, 21, 31, 11, 3, WHITE);
+      display.setTextColor(BLACK);
+      display.setCursor(9, 23);
+      display.print("TERM");
+      
+    }else{
+      display.fillRoundRect(5, 21, 31, 11, 3, WHITE);
+      display.setTextColor(BLACK);
+      display.setCursor(9, 23);
+      display.print("STOP");
+    }
+  }
+  display.setTextColor(WHITE);
   display.display();
 }

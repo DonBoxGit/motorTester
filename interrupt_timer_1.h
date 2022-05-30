@@ -1,5 +1,5 @@
-#ifndef INTERRUPT_TIMER1_H
-#define INTERRUPT_TIMER1_H
+#ifndef INTERRUPT_TIMER_1_H
+#define INTERRUPT_TIMER_1_H
 
 volatile int16_t  impulse = 3000;
 volatile uint16_t steps   = 0;
@@ -21,4 +21,4 @@ ISR (TIMER1_COMPA_vect) {
   if(digitalRead(STEP_PIN)) steps++;
 }
 
-#endif INTERRUPT_TIMER1_H
+#endif INTERRUPT_TIMER_1_H

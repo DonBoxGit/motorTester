@@ -11,7 +11,7 @@
 #include <Adafruit_SSD1306.h>
 #include <GyverEncoder.h>
 #include "Motor.h"
-#include "interrupt_timer1.h"
+#include "interrupt_timer_1.h"
 
 Motor motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
@@ -73,7 +73,6 @@ void loop() {
     draw();
     tmr = millis();
   }
-
   
   motor.execute();
 }

@@ -1,11 +1,11 @@
 /* Motor Tester ver. 1.0
-*   Stepper Motor: MITSUMI M42SP-7
-*   Step Angle   : 7.5 degree
-*
-*  Driver: A4988
-*    ENBL: LOW - On, HIGH - Off
-*    DIR : HIGH - ClockWise, LOW - CounterClockWise 
-*/
+ *   Stepper Motor: MITSUMI M42SP-7
+ *   Step Angle   : 7.5 degree
+ *
+ * Driver: A4988
+ *    ENBL: LOW - On, HIGH - Off
+ *    DIR : HIGH - ClockWise, LOW - CounterClockWise 
+ */
 
 #include "setup.h"                                                                                                                     
 #include <Adafruit_SSD1306.h>
@@ -67,9 +67,9 @@ void loop() {
       motor.stop();
   }
   if(!digitalRead(BUTTON_RESET_PIN)) steps = 0;
-  if(!digitalRead(TERM_SW_PIN)) motor.stop();
+  if(!digitalRead(TERM_SW_PIN))      motor.stop();
 
-  if(millis() - tmr >= 100){
+  if(millis() - tmr >= 50){
     draw();
     tmr = millis();
   }
@@ -78,7 +78,7 @@ void loop() {
 }
 
   uint32_t tmr1;
-  bool viewFlag = false;
+  bool blinkFlag = false;
    
 void draw(void) {
   display.clearDisplay();
@@ -135,17 +135,17 @@ void draw(void) {
   if(!motor.getEnable()){
     if(millis() - tmr1 >= 500){
         tmr1 = millis();
-        viewFlag = !viewFlag;
+        blinkFlag = !blinkFlag;
       }
     if(motor.getDirection()){
-      if(viewFlag){
+      if(blinkFlag){
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
         display.setCursor(4, 23);
         display.print("FORWARD");
       }
     } else {
-      if(viewFlag){
+      if(blinkFlag){
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
         display.setCursor(4, 23);

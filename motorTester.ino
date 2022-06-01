@@ -24,7 +24,8 @@ void setup() {
   pinMode(BUTTON_LEFT_PIN,  INPUT_PULLUP);
   pinMode(BUTTON_RESET_PIN, INPUT_PULLUP);
   pinMode(TERM_SW_PIN,      INPUT_PULLUP);
-
+  pinMode(SPEAKER_PIN,      OUTPUT);
+  
   encoder.setType(TYPE2);
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, DISPLAY_I2C_ADDR)) {
@@ -81,6 +82,7 @@ void loop() {
   bool blinkFlag = false;
    
 void draw(void) {
+  encoder.tick();
   display.clearDisplay();
   
   display.setCursor(3, 10);
@@ -139,6 +141,7 @@ void draw(void) {
       }
     if(motor.getDirection()){
       if(blinkFlag){
+        tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
         display.setCursor(4, 23);
@@ -146,6 +149,7 @@ void draw(void) {
       }
     } else {
       if(blinkFlag){
+        tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
         display.setCursor(4, 23);

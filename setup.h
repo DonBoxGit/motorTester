@@ -9,6 +9,10 @@
 #define SLK 3
 #define SW  4
 
+#define SPEAKER_PIN         11
+#define FREQUENCY_SP        1100
+#define DURATION_SP         170
+
 #define BUTTON_RIGHT_PIN    A0
 #define BUTTON_LEFT_PIN     A1
 #define BUTTON_RESET_PIN    10

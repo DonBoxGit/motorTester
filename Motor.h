@@ -14,7 +14,7 @@ class Motor {
     void stop         (void);  
 	bool getEnable	  (void);
 	bool getDirection (void);
-	void execute	  	(void);
+	void execute	  (void);
   
   private:
     void run          (void);

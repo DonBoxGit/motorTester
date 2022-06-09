@@ -26,7 +26,7 @@ void setup() {
   pinMode(TERM_SW_PIN,      INPUT_PULLUP);
   pinMode(SPEAKER_PIN,      OUTPUT);
   
-  encoder.setEncType(0);			      // Full Step Type Ecnoder
+  encoder.setEncType(0);			// Full Step Type Ecnoder
   attachInterrupt(0, isr, CHANGE);  // SLK
   attachInterrupt(1, isr, CHANGE);  // DT
   

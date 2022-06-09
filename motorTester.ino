@@ -9,13 +9,13 @@
 
 #include "setup.h"                                                                                                                     
 #include <Adafruit_SSD1306.h>
-#include <GyverEncoder.h>
+#include <EncButton.h>
 #include "Motor.h"
 #include "interrupt_timer_1.h"
 
 Motor motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
-Encoder encoder(SLK, DT, SW);
+EncButton<EB_TICK, DT, SLK, SW> encoder;
 
 void setup() {
   //Serial.begin(9600);
@@ -26,7 +26,10 @@ void setup() {
   pinMode(TERM_SW_PIN,      INPUT_PULLUP);
   pinMode(SPEAKER_PIN,      OUTPUT);
   
-  encoder.setType(TYPE2);
+  encoder.setEncType(0);  			// Full Step Type Ecnoder
+  attachInterrupt(0, isr, CHANGE);  // SLK
+  attachInterrupt(1, isr, CHANGE);  // DT
+  
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, DISPLAY_I2C_ADDR)) {
     Serial.println(F("SSD1306 allocation failed."));
@@ -38,6 +41,10 @@ void setup() {
   // Show initial display buffer contents on the screen --
   // the library initializes this with an Adafruit splash screen.
   display.display();
+}
+
+void isr() {
+  encoder.tickISR();  // в прерывании вызываем тик ISR
 }
 
 uint8_t  subtrahend = 100;
@@ -53,7 +60,7 @@ void loop() {
     if(impulse < MIN_) impulse = MIN_;
     else impulse -= subtrahend;
   }
-  if(encoder.isClick()) {
+  if(encoder.isPress()) {
     if(score == 2) {subtrahend = 100; score = 0;}
     else           {subtrahend /= 10; score++;  }
   }

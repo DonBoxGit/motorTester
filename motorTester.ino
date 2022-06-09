@@ -1,4 +1,4 @@
-/* Motor Tester ver. 1.0
+/* Motor Tester ver. 1.1
  *   Stepper Motor: MITSUMI M42SP-7
  *   Step Angle   : 7.5 degree
  *

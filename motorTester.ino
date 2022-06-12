@@ -7,7 +7,7 @@
  *    DIR : HIGH - ClockWise, LOW - CounterClockWise 
  */
 
-#include "setup.h"                                                                                                                     
+#include "config.h"                                                                                                                     
 #include <Adafruit_SSD1306.h>
 #include <EncButton.h>
 #include "Motor.h"
@@ -18,7 +18,10 @@ Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
 EncButton<EB_TICK, DT, SLK, SW> encoder;
 
 void setup() {
-  //Serial.begin(9600);
+  #ifdef DEBUG
+  Serial.begin(9600);
+  #endif
+  
   initInterrupt();
   pinMode(BUTTON_RIGHT_PIN, INPUT_PULLUP);
   pinMode(BUTTON_LEFT_PIN,  INPUT_PULLUP);

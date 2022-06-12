@@ -1,5 +1,5 @@
-#ifndef SETUP_H
-#define SETUP_H
+#ifndef CONFIG_H
+#define CONFIG_H
 
 #define STEP_PIN 6
 #define DIR_PIN  7
@@ -26,4 +26,4 @@
 #define MIN_ 60   // Max Speed
 #define MAX_ 3000 // Min Speed
 
-#endif SETUP_H
+#endif CONFIG_H

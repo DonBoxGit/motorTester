@@ -5,7 +5,9 @@
 
 class Motor {
   public:
-	Motor  (const uint8_t step, const uint8_t dir, const uint8_t enb);
+	Motor  (const uint8_t step, 
+	        const uint8_t dir ,
+	        const uint8_t enb);
 	~Motor ();
 	void enableOn	  (void);
 	void enableOff	  (void);

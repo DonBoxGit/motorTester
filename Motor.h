@@ -11,11 +11,11 @@ class Motor {
 	  ~Motor ();
 	  void enableOn	  	(void);
 	  void enableOff	(void);
-	  void setForward   (void);
-	  void setReverse   (void);
-	  void stop		  	(void); 
+	  void setForward   	(void);
+	  void setReverse   	(void);
+	  void stop		(void); 
 	  bool getEnable	(void);
-	  bool getDirection (void);
+	  bool getDirection 	(void);
 	  void execute	  	(void);
    
   private:

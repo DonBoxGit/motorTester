@@ -9,17 +9,17 @@ class Motor {
 	          const uint8_t dir ,
 	          const uint8_t enb);
 	  ~Motor ();
-	  void enableOn	  	(void);
-	  void enableOff	(void);
-	  void setForward   	(void);
-	  void setReverse   	(void);
-	  void stop		(void); 
-	  bool getEnable	(void);
-	  bool getDirection 	(void);
-	  void execute	  	(void);
+	  void enableOn	    (void);
+	  void enableOff    (void);
+	  void setForward   (void);
+	  void setReverse   (void);
+	  void stop	    (void); 
+	  bool getEnable    (void);
+	  bool getDirection (void);
+	  void execute	    (void);
    
   private:
-    void run		  	(void);
+    void run		    (void);
 	
 	  uint8_t step_pin;
 	  uint8_t dir_pin;

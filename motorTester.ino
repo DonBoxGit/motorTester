@@ -6,7 +6,7 @@
  *    ENBL: LOW - On, HIGH - Off
  *    DIR : HIGH - ClockWise, LOW - CounterClockWise 
  */
-
+#define DEBUG
 #include "config.h"                                                                                                                     
 #include <Adafruit_SSD1306.h>
 #include <EncButton.h>
@@ -16,20 +16,23 @@
 Motor motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
 EncButton<EB_TICK, DT, SLK, SW> encoder;
-
+EncButton<EB_TICK, BUTTON_RIGHT_PIN> right_btn(INPUT_PULLUP);
+EncButton<EB_TICK, BUTTON_LEFT_PIN > left_btn (INPUT_PULLUP);
+EncButton<EB_TICK, BUTTON_RESET_PIN> reset_btn(INPUT_PULLUP);
+ 
 void setup() {
   #ifdef DEBUG
   Serial.begin(9600);
   #endif
   
   initInterrupt();
-  pinMode(BUTTON_RIGHT_PIN, INPUT_PULLUP);
-  pinMode(BUTTON_LEFT_PIN,  INPUT_PULLUP);
-  pinMode(BUTTON_RESET_PIN, INPUT_PULLUP);
+  //pinMode(BUTTON_RIGHT_PIN, INPUT_PULLUP);
+  //pinMode(BUTTON_LEFT_PIN,  INPUT_PULLUP);
+  //pinMode(BUTTON_RESET_PIN, INPUT_PULLUP);
   pinMode(TERM_SW_PIN,      INPUT_PULLUP);
   pinMode(SPEAKER_PIN,      OUTPUT);
   
-  encoder.setEncType(0);			// Full Step Type Ecnoder
+  encoder.setEncType(0);			      // Full Step Type Ecnoder
   attachInterrupt(0, isr, CHANGE);  // SLK
   attachInterrupt(1, isr, CHANGE);  // DT
   
@@ -56,29 +59,38 @@ uint32_t tmr        = 0;
 
 void loop() {
   encoder.tick();
-  if(encoder.isRight()) {
+  right_btn.tick();
+  left_btn.tick();
+  reset_btn.tick();
+
+  if(encoder.right()) {
     impulse += subtrahend;
   }
-  else if(encoder.isLeft()) {
+  else if(encoder.left()) {
     if(impulse < MIN_) impulse = MIN_;
     else impulse -= subtrahend;
   }
-  if(encoder.isPress()) {
+  if(encoder.click()) {
     if(score == 2) {subtrahend = 100; score = 0;}
     else           {subtrahend /= 10; score++;  }
   }
 
-  if(!digitalRead(BUTTON_RIGHT_PIN)) {
+  if(right_btn.press()) {
     motor.setForward();
     motor.enableOn();
-  }else if(!digitalRead(BUTTON_LEFT_PIN)) {
+  } else if (right_btn.release()) {
+    motor.enableOff();
+  }
+  
+  if(left_btn.press()) {
     motor.setReverse();
     motor.enableOn();
-  }else{
-      motor.stop();
+  } else if (left_btn.release()) {
+    motor.enableOff();
   }
-  if(!digitalRead(BUTTON_RESET_PIN)) steps = 0;
-  if(!digitalRead(TERM_SW_PIN))      motor.stop();
+  
+  if(reset_btn.click()) steps = 0;
+  if(!digitalRead(TERM_SW_PIN)) motor.stop();
 
   if(millis() - tmr >= 50){
     draw();

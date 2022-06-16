@@ -14,16 +14,27 @@ Motor::Motor(const uint8_t step,
 Motor::~Motor() {}
 
 void Motor::run() {
+  if(!((TIMSK1 >> OCIE1A) & 1)) {
 	TIMSK1 |= (1 << OCIE1A);
+  #ifdef DEBUG
+  Serial.println("Motor TURN");
+  #endif
+  }
 }
 
 void Motor::stop() {
+  if((TIMSK1 >> OCIE1A) & 1) {
 	enable = HIGH;
 	TIMSK1 &= ~(1 << OCIE1A);
+  TCNT1 = 0x00;
+  PORTD &= ~(1 << 6); // digitalWrite(step_pin, LOW);
+  #ifdef DEBUG
+  Serial.println("Motor STOP");
+  #endif
+  }
 }
 
 void Motor::execute() {
-	digitalWrite(enable_pin, enable);
 	if(!enable) {
 		digitalWrite(dir_pin, dir);
 		run();
@@ -34,14 +45,16 @@ void Motor::execute() {
 
 void Motor::enableOn() {
 	enable = LOW;
+  digitalWrite(enable_pin, enable);
 }
 
 void Motor::enableOff() {
 	enable = HIGH;
+  digitalWrite(enable_pin, enable);
 }
 
 void Motor::setForward() {
-  	dir = HIGH;
+  dir = HIGH;
 }
 
 void Motor::setReverse() {
@@ -49,7 +62,7 @@ void Motor::setReverse() {
 }
 
 bool Motor::getEnable() {
-  	return enable;
+  return enable;
 }
 
 bool Motor::getDirection() {

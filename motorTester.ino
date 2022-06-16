@@ -6,7 +6,7 @@
  *    ENBL: LOW - On, HIGH - Off
  *    DIR : HIGH - ClockWise, LOW - CounterClockWise 
  */
-#define DEBUG
+
 #include "config.h"                                                                                                                     
 #include <Adafruit_SSD1306.h>
 #include <EncButton.h>

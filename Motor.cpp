@@ -1,4 +1,5 @@
 #include "Motor.h"
+#include "config.h"
 
 Motor::Motor(const uint8_t step, 
              const uint8_t dir , 

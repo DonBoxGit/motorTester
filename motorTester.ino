@@ -29,8 +29,9 @@ void setup() {
   //pinMode(BUTTON_RIGHT_PIN, INPUT_PULLUP);
   //pinMode(BUTTON_LEFT_PIN,  INPUT_PULLUP);
   //pinMode(BUTTON_RESET_PIN, INPUT_PULLUP);
-  pinMode(TERM_SW_PIN,      INPUT_PULLUP);
-  pinMode(SPEAKER_PIN,      OUTPUT);
+  pinMode(TERM_SW_PIN_1, INPUT_PULLUP);
+  pinMode(TERM_SW_PIN_2, INPUT_PULLUP);
+  pinMode(SPEAKER_PIN,   OUTPUT);
   
   encoder.setEncType(0);			      // Full Step Type Ecnoder
   attachInterrupt(0, isr, CHANGE);  // SLK
@@ -90,7 +91,7 @@ void loop() {
   }
   
   if(reset_btn.click()) steps = 0;
-  if(!digitalRead(TERM_SW_PIN)) motor.stop();
+  if(!digitalRead(TERM_SW_PIN_1) || !digitalRead(TERM_SW_PIN_2)) motor.stop();
 
   if(millis() - tmr >= 50){
     draw();
@@ -101,7 +102,7 @@ void loop() {
 }
 
   uint32_t tmr1;
-  bool blinkFlag = false;
+  bool blinkFlag = true;
    
 void draw(void) {
   encoder.tick();
@@ -176,22 +177,27 @@ void draw(void) {
         display.setTextColor(BLACK);
         display.setCursor(4, 23);
         display.print("REVESRE");
+
       }
     }
   } else {
-    if(!digitalRead(TERM_SW_PIN)) {
-      display.fillRoundRect(5, 21, 31, 11, 3, WHITE);
+    if(!digitalRead(TERM_SW_PIN_1)) {
+      display.fillRoundRect(1, 21, 41, 11, 3, WHITE);
       display.setTextColor(BLACK);
-      display.setCursor(9, 23);
-      display.print("TERM");
-      
-    }else{
+      display.setCursor(4, 23);
+      display.print("TERM-1");      
+    } else if (!digitalRead(TERM_SW_PIN_2)) {
+      display.fillRoundRect(1, 21, 41, 11, 3, WHITE);
+      display.setTextColor(BLACK);
+      display.setCursor(4, 23);
+      display.print("TERM-2");
+    } else {
       display.fillRoundRect(5, 21, 31, 11, 3, WHITE);
       display.setTextColor(BLACK);
       display.setCursor(9, 23);
       display.print("STOP");
     }
-  }
+  } 
   display.setTextColor(WHITE);
   display.display();
 }

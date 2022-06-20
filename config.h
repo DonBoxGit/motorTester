@@ -16,7 +16,8 @@
 #define BUTTON_RIGHT_PIN    A0
 #define BUTTON_LEFT_PIN     A1
 #define BUTTON_RESET_PIN    10
-#define TERM_SW_PIN         9
+#define TERM_SW_PIN_1       9
+#define TERM_SW_PIN_2       12
 
 #define OLED_RESET         -1
 #define DISPLAY_I2C_ADDR    0x3C

@@ -4,7 +4,7 @@
 volatile int16_t  impulse = 3000;
 volatile uint16_t steps   = 0;
 
-void initInterrupt() {
+void initInterrupt(void) {
   cli();                                    // Запрет прерываний
   TCCR1A = 0;                               // Обнуляем регистры управления
   TCCR1B = 0;                               // Режим No Clock Source. (Timer/Counter Stopped)

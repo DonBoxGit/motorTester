@@ -37,7 +37,6 @@ void Motor::stop() {
 
 void Motor::execute() {
 	if(!enable) {
-		digitalWrite(dir_pin, dir);
 		run();
 	} else {
 		stop();
@@ -56,10 +55,12 @@ void Motor::enableOff() {
 
 void Motor::setForward() {
   dir = HIGH;
+  digitalWrite(dir_pin, dir);
 }
 
 void Motor::setReverse() {
 	dir = LOW;
+  digitalWrite(dir_pin, dir);
 }
 
 bool Motor::getEnable() {

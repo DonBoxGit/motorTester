@@ -14,11 +14,14 @@
 #include "interrupt_timer_1.h"
 #include "timer.h"
 
+
 Timer drawTimer(50);
 Timer rStatusTimer(500);
 
 Motor motor(STEP_PIN, DIR_PIN, ENBL_PIN);
+
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
+
 EncButton<EB_TICK, DT, SLK, SW> encoder;
 EncButton<EB_TICK, BUTTON_RIGHT_PIN> right_btn(INPUT_PULLUP);
 EncButton<EB_TICK, BUTTON_LEFT_PIN > left_btn (INPUT_PULLUP);
@@ -94,6 +97,7 @@ void loop() {
   }
   
   if(reset_btn.click()) steps = 0;
+  
   if(!digitalRead(TERM_SW_PIN_1) || !digitalRead(TERM_SW_PIN_2)) motor.stop();
 
   if(drawTimer.ready()) draw();

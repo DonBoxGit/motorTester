@@ -12,6 +12,10 @@
 #include <EncButton.h>
 #include "Motor.h"
 #include "interrupt_timer_1.h"
+#include "timer.h"
+
+Timer drawTimer(50);
+Timer rStatusTimer(500);
 
 Motor motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
@@ -56,7 +60,6 @@ void isr() {
 
 uint8_t  subtrahend = 100;
 uint8_t  score      = 0;
-uint32_t tmr        = 0;
 
 void loop() {
   encoder.tick();
@@ -93,17 +96,11 @@ void loop() {
   if(reset_btn.click()) steps = 0;
   if(!digitalRead(TERM_SW_PIN_1) || !digitalRead(TERM_SW_PIN_2)) motor.stop();
 
-  if(millis() - tmr >= 50){
-    draw();
-    tmr = millis();
-  }
-  
+  if(drawTimer.ready()) draw();
+
   motor.execute();
 }
 
-  uint32_t tmr1;
-  bool blinkFlag = true;
-   
 void draw(void) {
   encoder.tick();
   display.clearDisplay();
@@ -158,12 +155,8 @@ void draw(void) {
     display.print(steps);
 
   if(!motor.getEnable()){
-    if(millis() - tmr1 >= 500){
-        tmr1 = millis();
-        blinkFlag = !blinkFlag;
-      }
     if(motor.getDirection()){
-      if(blinkFlag){
+      if(rStatusTimer.ready()){
         tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
@@ -171,7 +164,7 @@ void draw(void) {
         display.print("FORWARD");
       }
     } else {
-      if(blinkFlag){
+      if(rStatusTimer.ready()){
         tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);

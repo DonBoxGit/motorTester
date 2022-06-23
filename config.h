@@ -5,13 +5,13 @@
 #define DIR_PIN  7
 #define ENBL_PIN 8
 
-#define DT  2
-#define SLK 3
-#define SW  4
+#define DT  2         // S1
+#define SLK 3         // S2
+#define SW  4         // Key
 
 #define SPEAKER_PIN         11
 #define FREQUENCY_SP        1100
-#define DURATION_SP         170
+#define DURATION_SP         140
 
 #define BUTTON_RIGHT_PIN    A0
 #define BUTTON_LEFT_PIN     A1

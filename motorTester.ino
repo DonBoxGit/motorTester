@@ -5,6 +5,8 @@
    Driver: A4988
       ENBL: LOW - On, HIGH - Off
       DIR : HIGH - ClockWise, LOW - CounterClockWise
+      
+   Add Timer Class timer.h
 */
 
 #include "config.h"

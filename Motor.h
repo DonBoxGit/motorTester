@@ -13,13 +13,13 @@ class Motor {
 	  void enableOff    (void);
 	  void setForward   (void);
 	  void setReverse   (void);
-	  void stop         (void); 
 	  bool getEnable    (void);
 	  bool getDirection (void);
 	  void execute      (void);
    
   private:
     void run          (void);
+    void stop         (void); 
 	
 	  uint8_t step_pin;
 	  uint8_t dir_pin;

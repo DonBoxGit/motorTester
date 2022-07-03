@@ -16,11 +16,8 @@
 #include "interrupt_timer_1.h"
 #include "timer.h"
 
-
 Timer drawTimer(50);
 Timer rStatusTimer(500);
-
-Motor motor(STEP_PIN, DIR_PIN, ENBL_PIN);
 
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
 
@@ -61,9 +58,9 @@ void isr() {
   encoder.tickISR();  // в прерывании вызываем тик ISR
 }
 
-uint8_t  subtrahend = 100;
-int8_t   score      = 0;
-bool blinkFlag = true;
+uint8_t subtrahend = 100;
+int8_t  score      = 0;
+bool    blinkFlag  = false;
 
 void loop() {
   encoder.tick();
@@ -81,6 +78,7 @@ void loop() {
   }
 
   if (encoder.click()) {
+    Motor *motor = new Motor(STEP_PIN, DIR_PIN, ENBL_PIN);   // Создаем указатель на объект класса двигателя
     while (true) {
       encoder.tick();
       right_btn.tick();
@@ -102,26 +100,28 @@ void loop() {
       }
 
       if (right_btn.press()) {
-        motor.setForward();
-        motor.enableOn();
+        motor -> setForward();
+        motor -> enableOn();
       } else if (right_btn.release()) {
-        motor.enableOff();
+        motor -> enableOff();
+        blinkFlag = false;
       }
 
       if (left_btn.press()) {
-        motor.setReverse();
-        motor.enableOn();
+        motor -> setReverse();
+        motor -> enableOn();
       } else if (left_btn.release()) {
-        motor.enableOff();
+        motor -> enableOff();
+        blinkFlag = false;
       }
 
       if (reset_btn.click()) steps = 0;
 
-      if (!digitalRead(TERM_SW_PIN_1) || !digitalRead(TERM_SW_PIN_2)) motor.stop();
+      if (!digitalRead(TERM_SW_PIN_1) || !digitalRead(TERM_SW_PIN_2)) motor -> enableOff();
 
-      if (drawTimer.ready()) mainMenu();
+      if (drawTimer.ready()) mainMenu(motor);
 
-      motor.execute();
+      motor -> execute();
     }
   }
 }
@@ -159,7 +159,7 @@ void startMenu(void) {
 }
 
 
-void mainMenu(void) {
+void mainMenu(Motor *motor) {
   display.clearDisplay();
 
   display.setCursor(3, 10);
@@ -211,9 +211,9 @@ void mainMenu(void) {
   display.setCursor(92, 25);
   display.print(steps);
   
-  if (!motor.getEnable()) {
+  if (!motor -> getEnable()) {
     if (rStatusTimer.ready()) blinkFlag = !blinkFlag;
-    if (motor.getDirection()) {
+    if (motor -> getDirection()) {
       if (blinkFlag) {
         tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);

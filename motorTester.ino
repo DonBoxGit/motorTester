@@ -7,6 +7,7 @@
       DIR : HIGH - ClockWise, LOW - CounterClockWise
       
    Add Timer Class timer.h
+   Improve Motor Class
 */
 
 #include "config.h"

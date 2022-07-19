@@ -1,11 +1,14 @@
 /* Motor Tester ver. 1.2
+     For ATmega328p(Old Bootloader)
+    
      Stepper Motor: MITSUMI M42SP-7
      Step Angle   : 7.5 degree
 
    Driver: A4988
       ENBL: LOW - On, HIGH - Off
       DIR : HIGH - ClockWise, LOW - CounterClockWise
-      
+
+   Add Blink Class blink.h   
    Add Timer Class timer.h
    Improve Motor Class
 */
@@ -16,9 +19,10 @@
 #include "Motor.h"
 #include "interrupt_timer_1.h"
 #include "timer.h"
+#include "blink.h"
 
 Timer drawTimer(50);
-Timer rStatusTimer(500);
+Blink rStatus(500);
 
 Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, OLED_RESET);
 
@@ -61,7 +65,11 @@ void isr() {
 
 uint8_t subtrahend = 100;
 int8_t  score      = 0;
-bool    blinkFlag  = false;
+
+enum Driver {
+  A4988,
+  TB6600
+} driver;
 
 void loop() {
   encoder.tick();
@@ -86,10 +94,7 @@ void loop() {
       left_btn.tick();
       reset_btn.tick();
 
-      if (encoder.right()) {
-        impulse += subtrahend;
-      }
-      
+      if (encoder.right()) impulse += subtrahend;
       else if (encoder.left()) {
         if (impulse < MIN_) impulse = MIN_;
         else impulse -= subtrahend;
@@ -105,7 +110,7 @@ void loop() {
         motor -> enableOn();
       } else if (right_btn.release()) {
         motor -> enableOff();
-        blinkFlag = false;
+        rStatus.reset();
       }
 
       if (left_btn.press()) {
@@ -113,7 +118,7 @@ void loop() {
         motor -> enableOn();
       } else if (left_btn.release()) {
         motor -> enableOff();
-        blinkFlag = false;
+        rStatus.reset();
       }
 
       if (reset_btn.click()) steps = 0;
@@ -213,9 +218,8 @@ void mainMenu(Motor *motor) {
   display.print(steps);
   
   if (!motor -> getEnable()) {
-    if (rStatusTimer.ready()) blinkFlag = !blinkFlag;
     if (motor -> getDirection()) {
-      if (blinkFlag) {
+      if (rStatus.ready()) {
         tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
@@ -223,7 +227,7 @@ void mainMenu(Motor *motor) {
         display.print("FORWARD");
       }
     } else {
-      if (blinkFlag) {
+      if (rStatus.ready()) {
         tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);

@@ -18,8 +18,7 @@
 #include <EncButton.h>
 #include "Motor.h"
 #include "interrupt_timer_1.h"
-#include "timer.h"
-#include "blink.h"
+#include "timer_blink.h"
 
 Timer drawTimer(50);
 Blink rStatus(500);
@@ -219,7 +218,7 @@ void mainMenu(Motor *motor) {
   
   if (!motor -> getEnable()) {
     if (motor -> getDirection()) {
-      if (rStatus.ready()) {
+      if (rStatus.toggle()) {
         tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
@@ -227,7 +226,7 @@ void mainMenu(Motor *motor) {
         display.print("FORWARD");
       }
     } else {
-      if (rStatus.ready()) {
+      if (rStatus.toggle()) {
         tone(SPEAKER_PIN, FREQUENCY_SP, DURATION_SP);
         display.fillRoundRect(1, 21, 46, 11, 3, WHITE);
         display.setTextColor(BLACK);
